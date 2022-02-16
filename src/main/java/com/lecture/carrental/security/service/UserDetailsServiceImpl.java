@@ -1,7 +1,8 @@
-package com.lecture.carrental.security;
+package com.lecture.carrental.security.service;
 
 import com.lecture.carrental.domain.User;
 import com.lecture.carrental.repository.UserRepository;
+import com.lecture.carrental.security.service.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

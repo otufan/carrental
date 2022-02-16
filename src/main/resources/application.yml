@@ -23,3 +23,7 @@ spring:
         format_sql: true
     show-sql: true
 
+backendapi:
+  app:
+    jwtSecret: carRentalSecretKey
+    jwtExpirationMs: 7200000

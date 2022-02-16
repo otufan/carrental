@@ -1,4 +1,4 @@
-package com.lecture.carrental.security;
+package com.lecture.carrental.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lecture.carrental.domain.User;
@@ -37,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
