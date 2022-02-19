@@ -48,11 +48,7 @@ public class UserService {
             throw new AuthException("invalid credentials");
         }
 
-
-
     }
-
-
 
 }
 
