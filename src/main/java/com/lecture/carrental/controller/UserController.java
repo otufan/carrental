@@ -1,20 +1,21 @@
 package com.lecture.carrental.controller;
 
 import com.lecture.carrental.domain.User;
+import com.lecture.carrental.dto.UserDTO;
+import com.lecture.carrental.exception.ResourceNotFoundException;
 import com.lecture.carrental.security.jwt.JwtUtils;
 import com.lecture.carrental.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -32,9 +33,17 @@ public class UserController {
     public AuthenticationManager authenticationManager;
     public JwtUtils jwtUtils;
 
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> getUserById(HttpServletRequest request){
+        Long id = (Long) request.getAttribute("id");
+        UserDTO user = userService.findById(id);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
 
-    @PostMapping("/register")
+      @PostMapping("/register")
     public ResponseEntity<Map<String, Boolean>> registerUser(@Valid @RequestBody User user){ //@Valid ile entity class da obje uzerine yazdigimiz kisitlamalarin aciklamalarini getiriyoruz
                                                                                             //@Size ve @NotNull gibi anatasyonlarin mesajlari yani
         userService.register(user);
@@ -61,5 +70,34 @@ public class UserController {
         return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
+
+    @PutMapping("/user")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> updateUser(HttpServletRequest request, @Valid @RequestBody UserDTO userDTO){
+
+        Long id=(Long)request.getAttribute("id");
+        userService.updateUser(id, userDTO);
+       Map<String, Boolean> map=new HashMap<>();
+       return new ResponseEntity<>(map, HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/user/auth")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> updatePassword(HttpServletRequest request,
+                                                               @RequestBody Map<String, Object> userMap) {
+        Long id = (Long) request.getAttribute("id");
+        String newPassword = (String) userMap.get("newPassword");
+        String oldPassword = (String) userMap.get("oldPassword");
+
+        userService.updatePassword(id, newPassword, oldPassword);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+
 
 }

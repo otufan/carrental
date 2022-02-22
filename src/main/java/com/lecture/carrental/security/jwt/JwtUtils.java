@@ -1,4 +1,5 @@
 package com.lecture.carrental.security.jwt;
+
 import com.lecture.carrental.security.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    private static final Logger logger= LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${backendapi.app.jwtSecret}")
     private String jwtSecret;
@@ -21,26 +22,20 @@ public class JwtUtils {
     private long jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
         return Jwts.builder()
                 .setSubject("" + (userDetails.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-
     }
 
-    public Long getIdFromToken(String token){
-
-        return Long.parseLong(Jwts.parser().
-                setSigningKey(jwtSecret).
-                parseClaimsJwt(token).
-                getBody().
-                getSubject());
-
+    public Long getIdFromJwtToken(String token) {
+        return Long.parseLong(Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject());
     }
-
 
     public boolean validateJwtToken(String authToken) {
         try {
@@ -62,7 +57,12 @@ public class JwtUtils {
         catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
+
         return false;
     }
+
+
+
+
 
 }
