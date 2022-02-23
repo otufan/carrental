@@ -44,6 +44,7 @@ public class UserDTO {
     private String zipCode;
     private Boolean builtIn;
     private Set<String> roles;
+
     public void setRoles(Set<Role> roles) {
         Set<String> roles1 = new HashSet<>();
         Role[] role = roles.toArray(new Role[roles.size()]);

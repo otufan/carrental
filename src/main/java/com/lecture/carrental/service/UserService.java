@@ -7,6 +7,7 @@ import com.lecture.carrental.exception.AuthException;
 import com.lecture.carrental.exception.BadRequestException;
 import com.lecture.carrental.exception.ConflictException;
 import com.lecture.carrental.exception.ResourceNotFoundException;
+import com.lecture.carrental.projection.ProjectUser;
 import com.lecture.carrental.repository.RoleRepository;
 import com.lecture.carrental.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -15,15 +16,27 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 @AllArgsConstructor
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final static String USER_NOT_FOUND_MSG="user with id %d not found";
+
+
+    public List<ProjectUser> fetchAllUsers(){
+
+        return userRepository.findAllBy();
+    }
+
+
+
+
 
         // Bit database tablolarda bazi sutunlarin gosterilmesini istemezsek, sadece bazi sutunlari acmak istesek bu sekilde bir class icinden islem yapiyoruz
         public UserDTO findById(Long id) throws ResourceNotFoundException {

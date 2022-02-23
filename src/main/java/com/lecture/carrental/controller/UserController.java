@@ -2,7 +2,6 @@ package com.lecture.carrental.controller;
 
 import com.lecture.carrental.domain.User;
 import com.lecture.carrental.dto.UserDTO;
-import com.lecture.carrental.exception.ResourceNotFoundException;
 import com.lecture.carrental.security.jwt.JwtUtils;
 import com.lecture.carrental.service.UserService;
 import lombok.AllArgsConstructor;
@@ -32,6 +31,18 @@ public class UserController {
     public UserService userService;
     public AuthenticationManager authenticationManager;
     public JwtUtils jwtUtils;
+
+    @GetMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> getUserByIdAdmin(@PathVariable Long id){
+        UserDTO user=userService.findById(id);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+
+    }
+
+
+
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
@@ -78,6 +89,7 @@ public class UserController {
         Long id=(Long)request.getAttribute("id");
         userService.updateUser(id, userDTO);
        Map<String, Boolean> map=new HashMap<>();
+        map.put("success", true);
        return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
