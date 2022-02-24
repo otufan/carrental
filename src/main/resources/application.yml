@@ -7,7 +7,6 @@ server:
   servlet:
     context-path: /car-rental/api
 
-
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/carrentaldb
@@ -21,7 +20,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
         format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 backendapi:
   app:

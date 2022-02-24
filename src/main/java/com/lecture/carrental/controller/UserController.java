@@ -1,7 +1,9 @@
 package com.lecture.carrental.controller;
 
 import com.lecture.carrental.domain.User;
+import com.lecture.carrental.dto.AdminDTO;
 import com.lecture.carrental.dto.UserDTO;
+import com.lecture.carrental.projection.ProjectUser;
 import com.lecture.carrental.security.jwt.JwtUtils;
 import com.lecture.carrental.service.UserService;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,6 +35,18 @@ public class UserController {
     public AuthenticationManager authenticationManager;
     public JwtUtils jwtUtils;
 
+
+
+    @GetMapping("/user/auth/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProjectUser>> getAllUsers() {
+        List<ProjectUser> users = userService.fetchAllUsers();
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+
+
     @GetMapping("/user/{id}/auth")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getUserByIdAdmin(@PathVariable Long id){
@@ -40,9 +55,6 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
-
-
-
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
@@ -109,6 +121,30 @@ public class UserController {
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    @PutMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> updateUserAuth(@PathVariable Long id, @Valid @RequestBody AdminDTO adminDTO){
+
+        userService.updateUserAuth(id, adminDTO);
+        Map<String, Boolean> map=new HashMap<>();
+        map.put("succes", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id){
+
+        userService.removeById(id);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
 
 
 
