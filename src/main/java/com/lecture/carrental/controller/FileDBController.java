@@ -7,6 +7,7 @@ import com.lecture.carrental.service.FileDBService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,7 @@ public class FileDBController {
     }
 
     @GetMapping("/{id}")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> getFile(@PathVariable String id){
 
         FileDB fileDB=fileDBService.getFileById(id);
@@ -63,10 +65,11 @@ public class FileDBController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<FileDTO>> getAllFiles(){
         List<FileDTO> files=fileDBService.getAllFiles().map(dbFile->{
-            String fileDownloadUrl= ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
+            String fileDownloadUrl= ServletUriComponentsBuilder //tiklayarak aldigimiz linki olusturmaya yariyor
+                    .fromCurrentContextPath() //basta bizim olusturtugumuz link geliyor
                     .path("/files/")
                     .path(dbFile.getId())
                     .toUriString();
@@ -78,6 +81,17 @@ public class FileDBController {
 
     }
 
+    @GetMapping("/display/{id}")
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte []> displayImage(@PathVariable String id){
+        FileDB fileDB=fileDBService.getFileById(id);
+        final HttpHeaders headers=new HttpHeaders();
+
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<>(fileDB.getData(), headers, HttpStatus.CREATED);
+
+    }
 
 
 
