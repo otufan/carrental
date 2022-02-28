@@ -51,7 +51,7 @@ public class FileDBController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/download/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> getFile(@PathVariable String id){
 
@@ -67,6 +67,8 @@ public class FileDBController {
     @GetMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<FileDTO>> getAllFiles(){
+
+
         List<FileDTO> files=fileDBService.getAllFiles().map(dbFile->{
             String fileDownloadUrl= ServletUriComponentsBuilder //tiklayarak aldigimiz linki olusturmaya yariyor
                     .fromCurrentContextPath() //basta bizim olusturtugumuz link geliyor
@@ -74,7 +76,9 @@ public class FileDBController {
                     .path(dbFile.getId())
                     .toUriString();
 
-            return new FileDTO(dbFile.getName(), fileDownloadUrl, dbFile.getType(), dbFile.getData().length);
+          return new FileDTO(dbFile.getName(), fileDownloadUrl, dbFile.getType(), dbFile.getData().length);
+
+
             }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(files);

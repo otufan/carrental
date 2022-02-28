@@ -2,6 +2,7 @@ package com.lecture.carrental.controller;
 
 
 import com.lecture.carrental.domain.Car;
+import com.lecture.carrental.dto.CarDTO;
 import com.lecture.carrental.service.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +23,14 @@ import java.util.Map;
 public class CarController {
 
     public CarService carService;
+
+
+    @GetMapping("/visitors/all")
+    public ResponseEntity<List<CarDTO>> getAllCars(){
+        List<CarDTO> cars=carService.fetchAllCars();
+
+        return new ResponseEntity<>(cars, HttpStatus.OK);
+    }
 
     @PostMapping("/admin/{imageId}/add")
     public ResponseEntity<Map<String, Boolean>> addCar(@PathVariable String imageId, @Valid @RequestBody Car car){
@@ -33,7 +43,8 @@ public class CarController {
 
         return new ResponseEntity<>(map, HttpStatus.CREATED);
 
-
     }
+
+
 
 }
