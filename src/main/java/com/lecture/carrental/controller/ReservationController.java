@@ -27,17 +27,18 @@ public class ReservationController {
 
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('CUSTOMER') or hasROLE('ADMIN')")
-    public ResponseEntity<Map<String, Boolean>> makeReservation(HttpServletRequest request, @RequestParam(value = "carId") Car carId, @Valid @RequestBody Reservation reservation){
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> makeReservation(HttpServletRequest request,
+                                                                @RequestParam(value = "carId") Car carId,
+                                                                @Valid @RequestBody Reservation reservation) {
 
-        Long userId=(Long)request.getAttribute("id");
+        Long userId = (Long) request.getAttribute("id");
         reservationService.addReservation(reservation, userId, carId);
-        Map<String, Boolean> map=new HashMap<>();
 
-        map.put("Reservation added successfully !", true);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("Reservation added successfully!", true);
 
         return new ResponseEntity<>(map, HttpStatus.CREATED);
-
     }
 
 
