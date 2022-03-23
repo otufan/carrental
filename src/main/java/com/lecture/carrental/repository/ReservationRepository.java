@@ -1,6 +1,8 @@
 package com.lecture.carrental.repository;
 import com.lecture.carrental.domain.Reservation;
+import com.lecture.carrental.domain.User;
 import com.lecture.carrental.domain.enumeration.ReservationStatus;
+import com.lecture.carrental.dto.ReservationDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,10 @@ import java.util.List;
 @Transactional
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+   // @Query("SELECT new com.lecture.carrental.dto.ReservationDTO(r) FROM Reservation r WHERE r.userId.id=?1") //userId icine aslinda kullanicinin butun bilgileri gomulu !!!
+    List<ReservationDTO> findAllByUserId(User userId);
+
+
     @Query("SELECT r FROM Reservation r " +
             "LEFT JOIN fetch r.carId cd " +
             "LEFT JOIN fetch cd.image img " +
@@ -23,5 +29,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "?3 BETWEEN r.pickUpTime and r.dropOffTime)")
     List<Reservation> checkStatus(Long carId, LocalDateTime pickUpTime, LocalDateTime dropOffTime,
                                   ReservationStatus done, ReservationStatus canceled);
+
+
+
+
 }
 

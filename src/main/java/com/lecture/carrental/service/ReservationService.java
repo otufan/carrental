@@ -4,13 +4,13 @@ import com.lecture.carrental.domain.Car;
 import com.lecture.carrental.domain.Reservation;
 import com.lecture.carrental.domain.User;
 import com.lecture.carrental.domain.enumeration.ReservationStatus;
+import com.lecture.carrental.dto.ReservationDTO;
 import com.lecture.carrental.exception.BadRequestException;
 import com.lecture.carrental.exception.ResourceNotFoundException;
 import com.lecture.carrental.repository.CarRepository;
 import com.lecture.carrental.repository.ReservationRepository;
 import com.lecture.carrental.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,7 +33,12 @@ public class ReservationService {
         private final static String CAR_NOT_FOUND_MSG = "car with id %d not found";
 
 
+        public List<ReservationDTO> findAllByUserId(Long userId) {
 
+                User user=userRepository.findById(userId).get();
+
+               return reservationRepository.findAllByUserId(user);
+        }
 
         public void addReservation(Reservation reservation, Long userId, Car carId) throws BadRequestException {
 
@@ -73,5 +78,6 @@ public class ReservationService {
                 Long hours = (new Reservation()).getTotalHours(pickUpTime, dropOffTime);
                 return car.getPricePerHour() * hours;
         }
+
 
 }

@@ -34,6 +34,7 @@ public class Reservation {
     @NotNull(message = "Please enter the pick up time of the reservation")
     @Column(nullable = false)
     private LocalDateTime pickUpTime;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss", timezone = "Turkey")
     @NotNull(message = "Please enter the drop off time of the reservation")
     @Column(nullable = false)
@@ -42,6 +43,7 @@ public class Reservation {
     @Size(max = 150)
     @NotNull(message = "Please enter the pick up location of the reservation")
     @Column(length = 150, nullable = false)
+
     private String pickUpLocation;
     @Size(max = 150)
     @NotNull(message = "Please enter the drop off location of the reservation")
