@@ -40,6 +40,12 @@ public class ReservationService {
 
         }
 
+        public ReservationDTO findById(Long id) {
+
+                return reservationRepository.findByIdOrderById(id).orElseThrow(()->
+                        new ResourceNotFoundException(String.format(RESERVATION_NOT_FOUND_MSG, id)));
+        }
+
         public ReservationDTO findByIdAndUserId(Long id, Long userId) throws ResourceNotFoundException{
 
                 User user=userRepository.findById(userId).orElseThrow(()->
@@ -52,7 +58,8 @@ public class ReservationService {
 
         public List<ReservationDTO> findAllByUserId(Long userId) {
 
-                User user=userRepository.findById(userId).get();
+                User user=userRepository.findById(userId).orElseThrow(()->
+                        new ResourceNotFoundException(String.format(USER_NOT_FOUND_MSG, userId)));
 
                return reservationRepository.findAllByUserId(user);
         }
@@ -97,8 +104,5 @@ public class ReservationService {
         }
 
 
-        public ReservationDTO findById(Long id) {
 
-                return null;
-        }
 }

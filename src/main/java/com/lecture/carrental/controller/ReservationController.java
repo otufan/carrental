@@ -47,7 +47,14 @@ public class ReservationController {
     }
 
 
+    @GetMapping("/admin/auth/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List <ReservationDTO>> getAllUserReservations(@RequestParam(value="userId") Long userId){
 
+        List<ReservationDTO> reservations =reservationService.findAllByUserId(userId);
+
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
 
 
     @GetMapping("/{id}/auth")
@@ -92,5 +99,18 @@ public class ReservationController {
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
+    @PostMapping("/add/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> addReservation(@RequestParam (value = "userId") Long userId,
+                                                              @RequestParam (value ="carId") Car carId,
+                                                              @Valid @RequestBody Reservation reservation){
+        reservationService.addReservation(reservation, userId, carId);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("Reservation added successfully!", true);
+
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
+
+    }
 
 }

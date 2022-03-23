@@ -17,8 +17,12 @@ import java.util.Optional;
 @Transactional
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+
     // @Query("SELECT new com.lecture.carrental.dto.ReservationDTO(r) FROM Reservation r")
     List<ReservationDTO> findAllBy();
+
+    Optional<ReservationDTO> findByIdOrderById(Long id) throws ResourceNotFoundException;
+
 
     // @Query("SELECT new com.lecture.carrental.dto.ReservationDTO(r) FROM Reservation r WHERE r.id=?1 and r.userId.id=?2")
     Optional<ReservationDTO> findByIdAndUserId(Long id, User userId) throws ResourceNotFoundException;
