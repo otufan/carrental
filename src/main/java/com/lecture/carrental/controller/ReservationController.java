@@ -113,4 +113,20 @@ public class ReservationController {
 
     }
 
+    @PutMapping("/admin/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> updateReservation(@RequestParam(value = "carId") Car carId,
+                                                                  @RequestParam(value = "reservationId") Long reservationId,
+                                                                  @Valid @RequestBody Reservation reservation){
+
+        reservationService.updateReservation(carId, reservationId, reservation);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success!", true);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+
+
+    }
+
 }
