@@ -118,6 +118,18 @@ public class ReservationService {
                 reservationRepository.save(reservationExist);
         }
 
+        public void removeById(Long id) throws ResourceNotFoundException{
+
+                boolean reservationExist=reservationRepository.existsById(id);
+
+                if (!reservationExist) {
+                        throw new ResourceNotFoundException("Reservation does not exist!");
+
+                }
+                reservationRepository.deleteById(id);
+
+        }
+
         public boolean carAvailability(Long carId, LocalDateTime pickUpTime, LocalDateTime dropOffTime){
 
                 List<Reservation> checkStatus=reservationRepository.checkStatus(carId, pickUpTime, dropOffTime, ReservationStatus.DONE, ReservationStatus.CANCELED);
@@ -133,7 +145,5 @@ public class ReservationService {
                 Long hours = (new Reservation()).getTotalHours(pickUpTime, dropOffTime);
                 return car.getPricePerHour() * hours;
         }
-
-
 
 }
