@@ -157,7 +157,7 @@ public class ReservationController {
 
         map.put("isAvailable", !availability);
 
-        //if(!availability)  --> eger arac bosta degiilse bosuna ucret donmemesi icin bu sekilde if atilabilir !!! ama bizim proje de her halukarda ucret donecek
+        //if(!availability)  --> eger arac bosta degilse bosuna ucret donmemesi icin bu sekilde if atilabilir !!! ama bizim proje de her halukarda ucret donecek
         map.put("totalPrice", totalPrice);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
