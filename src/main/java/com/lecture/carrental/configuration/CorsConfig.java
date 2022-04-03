@@ -25,7 +25,11 @@ public class CorsConfig {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
-        registrationBean
+
+        registrationBean.setFilter(new CorsFilter(source));
+        registrationBean.setOrder(0);
+
+        return registrationBean;
 
     }
 

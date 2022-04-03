@@ -1,6 +1,5 @@
 package com.lecture.carrental.controller;
 
-
 import com.lecture.carrental.service.ExcelService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -17,22 +16,43 @@ import java.io.IOException;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/excel")
+@RequestMapping(path = "/excel")
 public class ExcelController {
 
     ExcelService excelService;
 
-
     @GetMapping("/download/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> getUserFile() throws IOException {
-
-        String filename="customers.xlsx";
+        String filename = "customers.xlsx";
         InputStreamResource file = new InputStreamResource(excelService.loadUser());
 
-
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=" + filename)
+                        "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vmd.ms-excel")).body(file);
+    }
+
+    // TODO: added
+    @GetMapping("/download/cars")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Resource> getCarFile() {
+        String fileName = "cars.xlsx";
+        InputStreamResource file = new InputStreamResource(excelService.loadCar());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .contentType(MediaType.parseMediaType("application/vmd.ms-excel")).body(file);
+    }
+
+    // TODO: added
+    @GetMapping("/download/reservations")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Resource> getReservationFile() {
+        String fileName = "reservations.xlsx";
+        InputStreamResource file = new InputStreamResource(excelService.loadReservation());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                 .contentType(MediaType.parseMediaType("application/vmd.ms-excel")).body(file);
     }
 

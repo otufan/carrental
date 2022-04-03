@@ -1,6 +1,7 @@
 package com.lecture.carrental.service;
 
-
+import com.lecture.carrental.domain.Car;
+import com.lecture.carrental.domain.Reservation;
 import com.lecture.carrental.domain.User;
 import com.lecture.carrental.helper.ExcelHelper;
 import com.lecture.carrental.repository.CarRepository;
@@ -13,8 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-@Service
 @AllArgsConstructor
+@Service
 public class ExcelService {
 
     UserRepository userRepository;
@@ -22,10 +23,22 @@ public class ExcelService {
     ReservationRepository reservationRepository;
 
     public ByteArrayInputStream loadUser() throws IOException {
-
-        List<User> users=userRepository.findAll();
+        List<User> users = userRepository.findAll();
 
         return ExcelHelper.usersExcel(users);
     }
 
+    // TODO: added
+    public ByteArrayInputStream loadCar() {
+        List<Car> cars = carRepository.findAll();
+
+        return ExcelHelper.carsExcel(cars);
+    }
+
+    // TODO: added
+    public ByteArrayInputStream loadReservation() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        return ExcelHelper.reservationsExcel(reservations);
+    }
 }
