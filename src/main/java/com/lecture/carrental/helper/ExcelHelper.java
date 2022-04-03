@@ -52,7 +52,7 @@ public class ExcelHelper {
 
 
         } catch  (IOException e) {
-            throw new RuntimeException("fail to import data to Exccel file: " +e.getMessage());
+            throw new RuntimeException("fail to import data to Excel file: " +e.getMessage());
         }
 
     }
